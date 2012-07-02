@@ -1,4 +1,4 @@
-#!/usr/bin/python
+B1;3202;0c#!/usr/bin/python
 import unittest2
 import mechanize
 
@@ -51,6 +51,9 @@ class LoginGenerallyWorks(unittest2.TestCase):
         return b
 
     def test_wiki_logout_shows_login_link(self):
+        ## Note: For this to be true, you probably want to set the
+        ## $wgShowIPinHeader option in your wiki's LocalSettings.php
+        ## to FALSE.
         b = self.test_wiki_username_follows()
         self.assertTrue('zomg_oh_wiki__session' in get_cookie_names(b))
         self.assertTrue('sessionid' in get_cookie_names(b))
