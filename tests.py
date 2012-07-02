@@ -42,6 +42,20 @@ class LoginGenerallyWorks(unittest2.TestCase):
         clean_response = clean_b.open('https://openhatch.org/wiki/')
         clean_data = clean_response.read()
         self.assertFalse(wiki_userpage_url in clean_data)
+        self.assertTrue('/w/index.php?title=Special:UserLogin' in clean_data)
+
+        ## Return the browser for downstream use
+        return b
+
+    def test_wiki_logout_shows_login_link(self):
+        b = self.test_wiki_username_follows()
+        # Click the logout link
+        b.open('https://openhatch.org/wiki/Special:UserLogout').read()
+        # Assert that the user is encouraged to log in
+        data = b.open('https://openhatch.org/wiki/').read()
+        self.assertFalse('The user page for the IP address you are editing as'
+                         in data)
+        self.assertTrue('/w/index.php?title=Special:UserLogin' in data)
 
 if __name__ == '__main__':
     unittest2.main()
