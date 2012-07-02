@@ -21,6 +21,27 @@ class LoginGenerallyWorks(unittest2.TestCase):
         response = b.open('https://openhatch.org/')
         data = response.read()
         self.assertTrue(username in data)
+        return b
+
+    def test_wiki_username_follows(self):
+        # First, log into the OpenHatch site
+        b = self.test_login()
+        username = config.get('login', 'username')
+        # Now, visit the wiki. Does our username show up
+        # in the top-right?
+        response = b.open('https://openhatch.org/wiki/')
+        username_with_first_letter_cap = (username[0].upper() +
+                                          username[1:])
+        wiki_userpage_url = ('/wiki/User:' +
+                       username_with_first_letter_cap)
+        data = response.read()
+        self.assertTrue(wiki_userpage_url in data)
+
+        ### whereas, with a clean browser, we don't see that
+        clean_b = mechanize.Browser()
+        clean_response = clean_b.open('https://openhatch.org/wiki/')
+        clean_data = clean_response.read()
+        self.assertFalse(wiki_userpage_url in clean_data)
 
 if __name__ == '__main__':
     unittest2.main()
